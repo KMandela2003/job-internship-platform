@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — LaunchPad{% endblock %}
+{% block content %}
+    <h1 style="font-size: 1.6rem; margin-bottom: 1.5rem;">Dashboard</h1>
+
+    <h2 style="font-size: 1.1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.75rem;">
+        Roles You Posted
+    </h2>
+    {% for item in posted_opportunities %}
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="font-size: 1.05rem;">
+                    <a href="{% url 'opportunity_detail' item.pk %}" style="color: var(--text); text-decoration: none;">{{ item.title }}</a>
+                </h3>
+                <span style="font-size: 0.88rem; color: var(--muted);">{{ item.company }} &bull; {{ item.location }}</span>
+            </div>
+            <span class="badge badge-job">{{ item.applications.count }} applicant{{ item.applications.count|pluralize }}</span>
+        </div>
+    {% empty %}
+        <div class="empty-state" style="margin-bottom: 2rem;">You haven't posted any opportunities yet.</div>
+    {% endfor %}
+
+    <h2 style="font-size: 1.1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 2rem 0 0.75rem;">
+        Your Applications
+    </h2>
+    {% for app in my_applications %}
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="font-size: 1.05rem;">
+                    <a href="{% url 'opportunity_detail' app.opportunity.pk %}" style="color: var(--text); text-decoration: none;">{{ app.opportunity.title }}</a>
+                </h3>
+                <span style="font-size: 0.88rem; color: var(--muted);">{{ app.opportunity.company }} &bull; Applied {{ app.applied_at|date:"M d, Y" }}</span>
+            </div>
+            <span class="badge badge-internship">Submitted</span>
+        </div>
+    {% empty %}
+        <div class="empty-state">You haven't applied to any opportunities yet.</div>
+    {% endfor %}
+{% endblock %}

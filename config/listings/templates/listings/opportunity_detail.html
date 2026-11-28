@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ opportunity.title }} at {{ opportunity.company }}{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 1rem;">
+        <a href="{% url 'home' %}" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">&larr; Back to opportunities</a>
+    </div>
+
+    <div class="card" style="padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span class="badge {% if opportunity.opportunity_type == 'JOB' %}badge-job{% else %}badge-internship{% endif %}">
+                {{ opportunity.get_opportunity_type_display }}
+            </span>
+            <span style="font-size: 0.85rem; color: var(--muted);">Posted {{ opportunity.created_at|date:"M d, Y" }}</span>
+        </div>
+
+        <h1 style="font-size: 1.7rem; font-weight: 700; margin-bottom: 0.35rem;">{{ opportunity.title }}</h1>
+        <div class="meta-row" style="margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border);">
+            <strong style="color: var(--text);">{{ opportunity.company }}</strong>
+            <span>&bull;</span>
+            <span>{{ opportunity.location }}</span>
+        </div>
+
+        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem;">Role Description</h3>
+        <div style="color: #334155; font-size: 0.96rem;">
+            {{ opportunity.description|linebreaks }}
+        </div>
+    </div>
+
+    <div class="card" style="padding: 1.75rem 2rem; margin-top: 1.5rem;">
+        {% if user.is_authenticated %}
+            {% if opportunity.posted_by == user %}
+                <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">
+                    Applicants ({{ opportunity.applications.count }})
+                </h3>
+                {% for app in opportunity.applications.all %}
+                    <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                            <strong>@{{ app.applicant.username }}</strong>
+                            <span style="font-size: 0.82rem; color: var(--muted);">{{ app.applied_at|date:"M d, Y" }}</span>
+                        </div>
+                        <p style="font-size: 0.93rem; color: #334155; margin-bottom: 0.5rem;">{{ app.cover_note }}</p>
+                        {% if app.portfolio_url %}
+                            <a href="{{ app.portfolio_url }}" target="_blank" class="btn btn-outline btn-sm">View Portfolio / GitHub &nearr;</a>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p style="color: var(--muted); font-size: 0.92rem;">No applications received yet.</p>
+                {% endfor %}
+            {% elif already_applied %}
+                <p style="color: var(--green-text); font-weight: 600;">&#10003; You have submitted an application for this role.</p>
+            {% else %}
+                <h3 style="font-size: 1.15rem; margin-bottom: 0.25rem;">Apply for this position</h3>
+                <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Introduce yourself to {{ opportunity.company }}.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <p style="font-size: 0.95rem;">
+                <a href="{% url 'login' %}" style="color: var(--primary); font-weight: 600;">Log in</a> or
+                <a href="{% url 'register' %}" style="color: var(--primary); font-weight: 600;">create an account</a>
+                to apply for this opportunity.
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

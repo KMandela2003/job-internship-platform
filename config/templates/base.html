@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LaunchPad — Jobs & Internships{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-soft: #eff6ff;
+            --green-bg: #ecfdf5;
+            --green-text: #047857;
+            --purple-bg: #f5f3ff;
+            --purple-text: #6d28d9;
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .nav-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .brand {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.25rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 500;
+            font-size: 0.92rem;
+            transition: color 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); }
+        .nav-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .user-pill {
+            font-size: 0.85rem;
+            color: var(--muted);
+            background: var(--bg);
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            flex: 1;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline {
+            background: var(--surface);
+            color: var(--text);
+            border-color: var(--border);
+        }
+        .btn-outline:hover { background: var(--bg); }
+        .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.85rem; }
+
+        /* Cards & Badges */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .badge-job { background: var(--green-bg); color: var(--green-text); }
+        .badge-internship { background: var(--purple-bg); color: var(--purple-text); }
+
+        /* Forms */
+        .form-card {
+            max-width: 540px;
+            margin: 0 auto;
+        }
+        form p { margin-bottom: 1rem; }
+        label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            font-family: inherit;
+            font-size: 0.95rem;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+        .helptext {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 0.3rem;
+        }
+        .errorlist {
+            list-style: none;
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+
+        /* Alerts */
+        .messages {
+            list-style: none;
+            background: var(--green-bg);
+            border: 1px solid #a7f3d0;
+            color: var(--green-text);
+            padding: 0.85rem 1.1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.92rem;
+            font-weight: 500;
+        }
+
+        /* Utilities */
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            font-size: 0.88rem;
+            color: var(--muted);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            background: var(--surface);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            color: var(--muted);
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-inner">
+            <a href="{% url 'home' %}" class="brand">
+                <span class="brand-dot"></span>
+                LaunchPad
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'home' %}">Explore</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% endif %}
+            </div>
+            <div class="nav-actions">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create_opportunity' %}" class="btn btn-primary btn-sm">+ Post Role</a>
+                    <span class="user-pill">@{{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline btn-sm">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline btn-sm">Log in</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Sign up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        LaunchPad &middot; Student &amp; Graduate Opportunity Portal
+    </footer>
+</body>
+</html>

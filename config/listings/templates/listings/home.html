@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Jobs & Internships — LaunchPad{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 1.85rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.35rem;">
+            Find your next role
+        </h1>
+        <p style="color: var(--muted); font-size: 1rem;">
+            Browse verified internships and entry-level positions curated for students and graduates.
+        </p>
+    </div>
+
+    <form method="get" class="card" style="display: flex; flex-wrap: wrap; gap: 0.65rem; padding: 0.85rem; margin-bottom: 1.75rem;">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search by role, company, or city..." style="flex: 1; min-width: 220px;">
+        <select name="type" style="width: 170px;">
+            <option value="">All Categories</option>
+            <option value="JOB" {% if selected_type == 'JOB' %}selected{% endif %}>Full-time Jobs</option>
+            <option value="INTERNSHIP" {% if selected_type == 'INTERNSHIP' %}selected{% endif %}>Internships</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if query or selected_type %}
+            <a href="{% url 'home' %}" class="btn btn-outline">Reset</a>
+        {% endif %}
+    </form>
+
+    {% for item in opportunities %}
+        <div class="card card-hover">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.6rem;">
+                <div>
+                    <h3 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 0.2rem;">
+                        <a href="{% url 'opportunity_detail' item.pk %}" style="color: var(--text); text-decoration: none;">
+                            {{ item.title }}
+                        </a>
+                    </h3>
+                    <div class="meta-row">
+                        <strong style="color: var(--text);">{{ item.company }}</strong>
+                        <span>&bull;</span>
+                        <span>{{ item.location }}</span>
+                        <span>&bull;</span>
+                        <span>{{ item.created_at|timesince }} ago</span>
+                    </div>
+                </div>
+                <span class="badge {% if item.opportunity_type == 'JOB' %}badge-job{% else %}badge-internship{% endif %}">
+                    {{ item.get_opportunity_type_display }}
+                </span>
+            </div>
+
+            <p style="color: var(--muted); font-size: 0.94rem; margin-bottom: 1rem;">
+                {{ item.description|truncatewords:28 }}
+            </p>
+
+            <a href="{% url 'opportunity_detail' item.pk %}" class="btn btn-outline btn-sm">View Details &rarr;</a>
+        </div>
+    {% empty %}
+        <div class="empty-state">
+            <p style="font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">No opportunities found</p>
+            <p style="font-size: 0.9rem;">Try adjusting your search keywords or clear the active filter.</p>
+        </div>
+    {% endfor %}
+{% endblock %}

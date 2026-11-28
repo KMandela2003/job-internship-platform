@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Post a Role — LaunchPad{% endblock %}
+{% block content %}
+    <div class="card form-card">
+        <h2 style="font-size: 1.35rem; margin-bottom: 0.25rem;">Post a Job or Internship</h2>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Share an opening with candidates on LaunchPad.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Listing</button>
+        </form>
+    </div>
+{% endblock %}

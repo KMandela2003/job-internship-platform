@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+    <h1>My Dashboard</h1>
+
+    <h2>Roles I Posted</h2>
+    {% for item in posted_opportunities %}
+        <div class="card">
+            <h3><a href="{% url 'opportunity_detail' item.pk %}">{{ item.title }}</a> ({{ item.company }})</h3>
+            <p>Applications received: <strong>{{ item.applications.count }}</strong></p>
+        </div>
+    {% empty %}
+        <p>You haven't posted any roles yet.</p>
+    {% endfor %}
+
+    <h2>My Applications</h2>
+    {% for app in my_applications %}
+        <div class="card">
+            <h3><a href="{% url 'opportunity_detail' app.opportunity.pk %}">{{ app.opportunity.title }}</a> — {{ app.opportunity.company }}</h3>
+            <small>Applied on {{ app.applied_at|date:"M d, Y" }}</small>
+        </div>
+    {% empty %}
+        <p>You haven't applied to any roles yet.</p>
+    {% endfor %}
+{% endblock %}
